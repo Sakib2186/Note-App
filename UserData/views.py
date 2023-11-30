@@ -95,3 +95,6 @@ def note_description(request, pk):
     }
 
     return render(request, 'note_description.html', context)
+
+
+

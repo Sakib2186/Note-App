@@ -65,9 +65,13 @@
                   <div class="col-sm-10">
                       <input type="file" name="image" class="form-control" id="image-input" multiple>
                       <div id="selected-images-container"></div>
-                      <small class="form-text text-muted">Hold down the Ctrl (windows) or Command (Mac) button to select multiple images.</small>
+                      <input type="hidden" name="selected_images" id="selected-images">
+                      <small class="form-text text-muted">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple images.</small>
                   </div>
-                </div>
+              </div>
+
+
+
 
                 <div class="form-group button">
                   <div class="col-sm-offset-2 col-sm-10">
@@ -82,32 +86,40 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-
     <script>
-      document.getElementById('image-input').addEventListener('change', function (event) {
-          const container = document.getElementById('selected-images-container');
+      $(document).ready(function() {
+          $('#image-input').on('change', function() {
+              var container = $('#selected-images-container');
+              container.empty();
   
-          Array.from(event.target.files).forEach(file => {
-              const imageContainer = document.createElement('div');
-              imageContainer.className = 'selected-image-container';
+              var input = $(this)[0];
+              var files = input.files;
   
-              const image = document.createElement('img');
-              image.src = URL.createObjectURL(file);
-              image.className = 'selected-image';
+              for (var i = 0; i < files.length; i++) {
+                  var file = files[i];
+                  var reader = new FileReader();
   
-              const removeButton = document.createElement('button');
-              removeButton.innerHTML = '&times;'; // Unicode for 'times' (multiplication sign)
-              removeButton.className = 'close-button';
-              removeButton.addEventListener('click', function () {
-                  imageContainer.remove(); // Remove the selected image container
-              });
+                  reader.onload = function(e) {
+                      var imageContainer = $('<div class="selected-image-container"></div>');
+                      var image = $('<img class="selected-image" src="' + e.target.result + '">');
+                      var closeButton = $('<button type="button" class="close-button" onclick="removeImage(this)">×</button>');
   
-              imageContainer.appendChild(image);
-              imageContainer.appendChild(removeButton);
-              container.appendChild(imageContainer);
+                      imageContainer.append(image);
+                      imageContainer.append(closeButton);
+                      container.append(imageContainer);
+                  };
+  
+                  reader.readAsDataURL(file);
+              }
           });
       });
+  
+      function removeImage(button) {
+          var container = $('#selected-images-container');
+          $(button).parent().remove();
+      }
   </script>
+  
 
 </body>
 </html>

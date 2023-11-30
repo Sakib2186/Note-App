@@ -29,8 +29,15 @@
                     <h2>{{ note.title }}</h2>
                     <p>Username: {{ note.username }}</p>
                     <p>{{ note.description }}</p>
-                    {% if note.image %}
-                        <img src="{{ note.image.url }}" alt="{{ note.title }}">
+                
+                    {% if note.images.all %}
+                        <div class="row mt-3">
+                            {% for image in note.images.all %}
+                                <div class="col-md-4 mb-3">
+                                    <img src="{{ image.image.url }}" alt="{{ note.title }}" class="img-fluid">
+                                </div>
+                            {% endfor %}
+                        </div>
                     {% endif %}
 
                     

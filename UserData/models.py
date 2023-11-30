@@ -27,3 +27,9 @@ class UserNotes(models.Model):
 class NoteImage(models.Model):
     note = models.ForeignKey(UserNotes, related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(null=True, blank=True, upload_to='UserNotePictures/')
+
+    class Meta:
+        verbose_name = "User Notes"
+
+    def __str__(self) -> str:
+        return str(self.pk)
