@@ -8,6 +8,33 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
     <link rel="stylesheet" href="{% static 'add_note.css'%} ">
+
+    <style>
+      .selected-image-container {
+          position: relative;
+          display: inline-block;
+          margin-right: 5px;
+      }
+  
+      .selected-image {
+          max-width: 150px; /* Adjust the max-width as needed */
+          max-height: 150px; /* Adjust the max-height as needed */
+          display: block;
+      }
+  
+      .close-button {
+          position: absolute;
+          top: 0;
+          right: 0;
+          background-color: rgba(255, 255, 255, 0.8);
+          border: none;
+          padding: 2px;
+          cursor: pointer;
+          font-size: 14px;
+          line-height: 1;
+      }
+  </style>
+  
 </head>
 <body>
     <div class="page_title">
@@ -34,10 +61,12 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="inputPassword3" class="col-sm-2 form-control-label">Add Image</label>
-                    <div class="col-sm-10">
-                      <input type="file" name="image" class="form-control">
-                    </div>
+                  <label for="inputPassword3" class="col-sm-2 form-control-label">Add Images</label>
+                  <div class="col-sm-10">
+                      <input type="file" name="image" class="form-control" id="image-input" multiple>
+                      <div id="selected-images-container"></div>
+                      <small class="form-text text-muted">Hold down the Ctrl (windows) or Command (Mac) button to select multiple images.</small>
+                  </div>
                 </div>
 
                 <div class="form-group button">
@@ -52,6 +81,33 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+    <script>
+      document.getElementById('image-input').addEventListener('change', function (event) {
+          const container = document.getElementById('selected-images-container');
+  
+          Array.from(event.target.files).forEach(file => {
+              const imageContainer = document.createElement('div');
+              imageContainer.className = 'selected-image-container';
+  
+              const image = document.createElement('img');
+              image.src = URL.createObjectURL(file);
+              image.className = 'selected-image';
+  
+              const removeButton = document.createElement('button');
+              removeButton.innerHTML = '&times;'; // Unicode for 'times' (multiplication sign)
+              removeButton.className = 'close-button';
+              removeButton.addEventListener('click', function () {
+                  imageContainer.remove(); // Remove the selected image container
+              });
+  
+              imageContainer.appendChild(image);
+              imageContainer.appendChild(removeButton);
+              container.appendChild(imageContainer);
+          });
+      });
+  </script>
 
 </body>
 </html>

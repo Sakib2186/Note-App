@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User,auth
-from .models import UserInfo,UserNotes
+from .models import UserInfo,UserNotes, NoteImage
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
@@ -59,26 +59,25 @@ def notes_home(request,username):
     return render(request,'notes_home.html',context=context)
 
 @login_required
-def add_note(request,username):
-    if request.method=="POST":
-        title=request.POST['title']
-        note_description=request.POST['note_description']
-        image_file=request.FILES['image']
+def add_note(request, username):
+    if request.method == "POST":
+        title = request.POST['title']
+        note_description = request.POST['note_description']
+        files = request.FILES.getlist('image')  # Get a list of uploaded files
         user = request.user.username
-        new_note=UserNotes.objects.create(
+
+        new_note = UserNotes.objects.create(
             title=title,
             description=note_description,
-            image=image_file,
             username=UserInfo.objects.get(username=user)
         )
-        new_note.save()
-        return redirect('UserData:notes_home',username)
-        print("notes taken")
-        
-        
-    return render(request,'add_note.html')
 
+        for file in files:
+            NoteImage.objects.create(note=new_note, image=file)
 
+        return redirect('UserData:notes_home', username)
+
+    return render(request, 'add_note.html')
 
 @login_required
 def note_description(request, pk):
