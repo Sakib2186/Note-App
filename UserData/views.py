@@ -83,8 +83,15 @@ def add_note(request,username):
 @login_required
 def note_description(request, pk):
     note = get_object_or_404(UserNotes, pk=pk)
+    username=request.user.username
+     
+    if request.method == 'POST':
+        note.delete()
+        return redirect('UserData:notes_home', username)
+
 
     context = {
+        'username2':username,
         'note': note,
     }
 
