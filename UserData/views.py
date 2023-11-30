@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from django.contrib.auth.models import User,auth
-from .models import UserInfo,UserNotes
+from .models import UserInfo,UserNotes,Notes_Images
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
@@ -63,15 +63,17 @@ def add_note(request,username):
     if request.method=="POST":
         title=request.POST['title']
         note_description=request.POST['note_description']
-        image_file=request.FILES['image']
+        image_file_list=request.FILES.getlist('image')
         user = request.user.username
         new_note=UserNotes.objects.create(
-            title=title,
-            description=note_description,
-            image=image_file,
-            username=UserInfo.objects.get(username=user)
-        )
+                title=title,
+                description=note_description,
+                username=UserInfo.objects.get(username=user)
+            )
         new_note.save()
+        for i in image_file_list:
+            updating = Notes_Images.objects.create(note_id = new_note,image =i)
+            updating.save()
         return redirect('UserData:notes_home',username)
         print("notes taken")
         
