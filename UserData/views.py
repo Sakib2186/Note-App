@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User,auth
 from .models import UserInfo,UserNotes
@@ -77,3 +77,15 @@ def add_note(request,username):
         
         
     return render(request,'add_note.html')
+
+
+
+@login_required
+def note_description(request, pk):
+    note = get_object_or_404(UserNotes, pk=pk)
+
+    context = {
+        'note': note,
+    }
+
+    return render(request, 'note_description.html', context)
