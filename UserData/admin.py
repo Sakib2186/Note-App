@@ -1,5 +1,5 @@
 from django.contrib import admin
-from . models import UserInfo,UserNotes,Notes_Images
+from . models import UserInfo,UserNotes,NoteImage,Notes_Label
 # Register your models here.
 
 @admin.register(UserInfo)
@@ -8,8 +8,12 @@ class UserInfo(admin.ModelAdmin):
 
 @admin.register(UserNotes)
 class UserNotes(admin.ModelAdmin):
-    list_display = ['pk','username','title']
+    list_display = ['pk','username','title','note_label']
 
-@admin.register(Notes_Images)
-class Notes_Images(admin.ModelAdmin):
-    list_display=['note_id','image']
+@admin.register(NoteImage)
+class NoteImage(admin.ModelAdmin):
+    list_display=['note','image']
+
+@admin.register(Notes_Label)
+class Notes_Label(admin.ModelAdmin):
+    list_display=['labelName','label_for']

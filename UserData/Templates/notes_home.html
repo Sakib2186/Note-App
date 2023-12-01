@@ -68,6 +68,7 @@
                             <td><a href="{% url 'UserData:note_description' pk=note.pk%}">{{note.pk}}</a></td>
                             <td>{{note.title}}</a></td>
                             <td>{{note.description}}</td>
+                            <td>{{note.note_label}}</td>
                         </tr>
                         {% endfor %}
                         
