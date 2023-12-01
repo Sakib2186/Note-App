@@ -86,6 +86,7 @@
                                     <h5 class="card-title">{{note.pk}}. {{note.title}}</h5>
                                     <p class="card-text">Label(s): {{note.note_label}}</p>
                                     <p class="card-text" style="max-height: 100px; overflow: hidden;">{{note.description}}</p>
+                                    <p class="card-texxt" style="font-size:10px;">{{note.date}}</p>
                                     <a href="{% url 'UserData:note_description' pk=note.pk %}" style="position: absolute; top: 0; bottom: 0; left: 0; width: 100%;"></a>
                                 </div>
                             </div>
