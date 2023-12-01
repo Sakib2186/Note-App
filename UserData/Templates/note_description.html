@@ -81,14 +81,13 @@
                                 <!-- Move buttons to the bottom with flexbox -->
                                 <div class="mt-3 d-flex justify-content-between">
                                     <!-- Delete button at the bottom left -->
-                                    <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal">
-                                        Delete
-                                    </button>
-
-
-                                    <a href="{% url 'UserData:notes_edit' pk %}" class="btn btn-outline-secondary ml-2">Edit</a>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal">
+                                            Delete
+                                        </button>
                                     
-                            
+                                        <a href="{% url 'UserData:notes_edit' pk %}" class="btn btn-outline-warning ml-2">Edit</a>
+                                    </div>
                                     <!-- Back button at the bottom right -->
                                     <a href="{% url 'UserData:notes_home' username2 %}" class="btn btn-outline-secondary ml-2">Back to Notes</a>
                                 </div>
@@ -107,11 +106,11 @@
                                                 <p>Are you sure you want to delete this note?</p>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                <form method="post" action="{% url 'UserData:note_description' pk=note.pk %}">
+                                                <form method="post" action="{% url 'UserData:note_description' pk=note.pk %}" class="mr-auto">
                                                     {% csrf_token %}
-                                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                                    <button type="submit" class="btn btn-outline-danger">Delete</button>
                                                 </form>
+                                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
                                             </div>
                                         </div>
                                     </div>
