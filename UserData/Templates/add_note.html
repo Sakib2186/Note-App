@@ -10,159 +10,130 @@
     <link rel="stylesheet" href="{% static 'add_note.css'%} ">
 
     <style>
-      .selected-image-container {
-          position: relative;
-          display: inline-block;
-          margin-right: 5px;
-      }
-  
-      .selected-image {
-          max-width: 150px; /* Adjust the max-width as needed */
-          max-height: 150px; /* Adjust the max-height as needed */
-          display: block;
-      }
-  
-      .close-button {
-          position: absolute;
-          top: 0;
-          right: 0;
-          background-color: rgba(255, 255, 255, 0.8);
-          border: none;
-          padding: 2px;
-          cursor: pointer;
-          font-size: 14px;
-          line-height: 1;
+      /* Common styles for responsiveness */
+      .form-group {
+          margin-bottom: 15px;
       }
 
-      /* Styling for the modal and overlay */
-      #myModal {
-          display: none;
-          position: fixed;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          padding: 20px;
-          background-color: #fff;
-          z-index: 1000;
+      .form-control,
+      .custom-file {
+          box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+          transition: box-shadow 0.3s ease;
       }
 
-      #overlay {
-          display: none;
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.5);
-          z-index: 999;
+      .form-control:hover,
+      .custom-file-input:hover {
+          box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
       }
 
-      /* Styling for the close button */
-      .close {
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          cursor: pointer;
+      /* Default styles for centering */
+      .note_form {
+          width: 50%;
+          margin: auto;
       }
 
+      /* Responsive adjustments */
+      @media only screen and (max-width: 1200px) {
+          .note_form {
+              width: 90%;
+          }
+      }
 
-      
+      @media only screen and (max-width: 768px) {
+          .note_form {
+              width: 95%;
+          }
+
+          .form-group.row {
+              flex-direction: column;
+          }
+
+          .custom-file {
+              margin-bottom: 10px;
+          }
+      }
   </style>
-  
 </head>
-<body>
-    <div class="page_title">
+<body class="bg-white">
+    <div class="page_title text-center mt-4">
+      <br><br>
         <h1 class="w">Create a New Note</h1>
+        <br>
     </div>
-    <div class="col-md-6 note_form">
-        <div class="box">
+    <div class="note_form">
+        <div class="box mt-4">
             <div class="box-divider m-0"></div>
             <div class="box-body">
-              <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="form-group row">
-                  <label for="title" class="col-sm-2 form-control-label">Title</label>
-                  <div class="col-sm-10">
-                    <input name="title" type="text" class="form-control" id="title" placeholder="Note Title">
-                  </div>
-                </div>
-                
-                <div class="form-group row">
-                  <label for="inputPassword3" class="col-sm-2 form-control-label">Note Description</label>
-                  <div class="col-sm-10">
-                    <textarea name="note_description" class="form-control" placeholder="Add your note" rows="10"></textarea>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="label">Select labels (multiple):</label>
-                  <select id="fruits" name="label" multiple>
-                    <option value="">-----------</option>
-                    {% for i in label %}
-                    <option value="{{i.labelName}}">{{i.labelName}}</option>
-                    {% endfor %}
-                </select>
-                <br>
-                <button type="button" class="btn btn-outline-success txt-success rounded buttons" data-toggle="modal" data-target="#deleteModal">
-                  Add Label
-              </button>
-
-                </div>
-      
-
-                <div class="form-group row">
-                  
-                  
-                  <label for="inputPassword3" class="col-sm-2 form-control-label">Add Images</label>
-                  <div class="col-sm-10">
-                      <input type="file" name="image" class="form-control" id="image-input" multiple>
-                      <div id="selected-images-container"></div>
-                      <input type="hidden" name="selected_images" id="selected-images">
-                      <small class="form-text text-muted">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple images.</small>
-                  </div>
-              </div>
-
-
-
-
-      
-              
-
-                <div class="form-group button">
-                  <div class="col-sm-offset-2 col-sm-10">
-                    <input type="submit" class="btn btn-outline-success txt-success rounded buttons" name="create_note" value="Create">
-                  </div>
-                </div>
-              </form>
-              
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input name="title" type="text" class="form-control bg-light" id="title" placeholder="Note Title">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="noteDescription">Note Description</label>
+                        <textarea name="note_description" class="form-control bg-light" id="noteDescription" placeholder="Add your note" rows="5"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="labels">Select labels (multiple)</label>
+                        <select id="labels" name="label" class="form-control bg-light" multiple>
+                            <option value="">-----------</option>
+                            {% for i in label %}
+                                <option value="{{i.labelName}}">{{i.labelName}}</option>
+                            {% endfor %}
+                        </select>
+                        <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple labels.</small>
+                        <button type="button" class="btn btn-outline-success rounded buttons mt-2" data-toggle="modal" data-target="#deleteModal">Add Label</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="images">Add Images</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="image-input" name="image" multiple>
+                            <label class="custom-file-label bg-light" for="image-input">Choose files</label>
+                        </div>
+                        <div id="selected-images-container"></div>
+                        <input type="hidden" name="selected_images" id="selected-images">
+                        <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple images.</small>
+                    </div>
+                    
+                    <div class="form-group text-right">
+                        <input type="submit" class="btn btn-outline-success txt-success rounded buttons" name="create_note" value="Create">
+                    </div>
+                </form>
             </div>
-          </div>
+        </div>
     </div>
 
-    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-      
-      <div class="modal-dialog" role="document">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="addModalLabel">Add Label</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                  </button>
-              </div>
-              <div class="modal-body">
-                <form method="POST">
-                  {% csrf_token %}
-                
-                <label for="label">Label:</label>
-                <input type="text" id="label" name="label">
-              </div>
-              <div class="modal-footer">
-                <button type="submit" class="btn btn-outline-success txt-success rounded buttons" name="add_labels" value="Add">Add</button>
-                <button  class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-              </div>
-            </form>
-          </div>
-      </div>
-  </div>
+
+      <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLabel">Add Label</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                  <form method="POST">
+                    {% csrf_token %}
+                  
+                  <label for="label">Label:</label>
+                  <input type="text" id="label" name="label">
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-outline-success txt-success rounded buttons" name="add_labels" value="Add">Add</button>
+                  <button  class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+              </form>
+            </div>
+        </div>
+    </div>
 
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
