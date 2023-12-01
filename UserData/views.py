@@ -143,8 +143,12 @@ def notes_edit(request,pk):
     title = note.title
     description = note.description
     note_label = note.note_label
-    note_label = note_label.split()
-   
+    print(note_label)
+    try:
+        note_label = note_label.split()
+    except:
+        note_label=[]
+    
     label = []
     for i in labels:
         label.append(i.labelName)
