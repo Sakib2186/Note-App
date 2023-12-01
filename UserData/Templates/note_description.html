@@ -72,7 +72,9 @@
                                     <div class="row mt-3 center-images resize-images">
                                         {% for image in note.images.all %}
                                             <div class="col-md-{{ column_size }} mb-3">
+                                                {% if image.image.url != None %}
                                                 <img src="{{ image.image.url }}" alt="{{ note.title }}" class="img-fluid">
+                                                {% endif %}
                                             </div>
                                         {% endfor %}
                                     </div>

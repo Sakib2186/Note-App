@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User,auth
 from .models import UserInfo,UserNotes, NoteImage,Notes_Label
 from django.conf import settings
-
+import os
 
 from django.contrib.auth.decorators import login_required
 # Create your views here.
@@ -136,7 +136,7 @@ def note_description(request, pk):
     return render(request, 'note_description.html', context)
 @login_required
 def notes_edit(request,pk):
-    username=request.user.username
+    username = request.user.username
     labels = Notes_Label.objects.all()
     image = NoteImage.objects.filter(note = UserNotes.objects.get(pk=pk))
     note = UserNotes.objects.get(username=username,pk=pk)
@@ -144,11 +144,11 @@ def notes_edit(request,pk):
     description = note.description
     note_label = note.note_label
     note_label = note_label.split()
-    print(note_label)
+   
     label = []
     for i in labels:
         label.append(i.labelName)
-    print(label)
+   
 
     if request.method == "POST":
         if request.POST.get('add_labels'):
@@ -156,6 +156,36 @@ def notes_edit(request,pk):
             label_name = request.POST['label']
             new_label = Notes_Label.objects.create(labelName=label_name,label_for =UserInfo.objects.get(username=username))
             new_label.save()
+
+        if request.POST.get('edit_note'):
+            title = request.POST['title']
+            note_description = request.POST['note_description']
+            label = request.POST.getlist('label')
+            files = request.FILES.getlist('image')
+            print(label)
+
+            if len(files)>0:
+                for i in image:
+                    path = settings.MEDIA_ROOT+str(i.image)
+                    os.remove(path)
+                    i = image.delete()
+                    
+                for file in files:
+                    NoteImage.objects.create(note=note, image=file)
+
+
+            note.title = title
+            note.description = note_description
+            string =""
+            for i in label:
+                print(i)
+                string = string + str(i) + " "
+            note.note_label = string
+            note.save()
+            return redirect('UserData:note_description',pk)
+
+
+
         
 
 
