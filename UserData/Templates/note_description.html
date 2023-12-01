@@ -69,15 +69,18 @@
                                 <p class="card-text" >{{ note.description }}</p>
 
                                 {% if note.images.all %}
-                                    <div class="row mt-3 center-images resize-images">
-                                        {% for image in note.images.all %}
-                                            <div class="col-md-{{ column_size }} mb-3">
-                                                {% if image.image.url != None %}
+                                <div class="row mt-3 center-images resize-images">
+                                    {% for image in note.images.all %}
+                                        <div class="col-md-4 mb-3">
+                                            {% if image.image.url != None %}
                                                 <img src="{{ image.image.url }}" alt="{{ note.title }}" class="img-fluid">
-                                                {% endif %}
-                                            </div>
-                                        {% endfor %}
-                                    </div>
+                                            {% endif %}
+                                        </div>
+                                        {% if forloop.counter|divisibleby:3 and not forloop.last %}
+                                            </div><div class="row mt-3 center-images resize-images">
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
                                 {% endif %}
 
                                 <!-- Move buttons to the bottom with flexbox -->
