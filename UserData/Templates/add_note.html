@@ -89,7 +89,7 @@
                     <div class="form-group">
                         <label for="labels">Select labels (multiple)</label>
                         <select id="labels" name="label" class="form-control bg-light" multiple>
-                            <option value="">-----------</option>
+                            <option value="None">-----------</option>
                             {% for i in label %}
                                 <option value="{{i.labelName}}">{{i.labelName}}</option>
                             {% endfor %}
