@@ -10,4 +10,5 @@ urlpatterns = [
     path('notes/<str:username>',views.notes_home,name='notes_home'),
     path('create_note/<str:username>',views.add_note,name='add_note'),
     path('details/<int:pk>', views.note_description, name='note_description'),
+    path('edit/<int:pk>',views.notes_edit,name="notes_edit")
 ]

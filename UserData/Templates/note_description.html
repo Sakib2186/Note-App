@@ -72,7 +72,9 @@
                                     <div class="row mt-3 center-images resize-images">
                                         {% for image in note.images.all %}
                                             <div class="col-md-{{ column_size }} mb-3">
+                                                {% if image.image.url != None %}
                                                 <img src="{{ image.image.url }}" alt="{{ note.title }}" class="img-fluid">
+                                                {% endif %}
                                             </div>
                                         {% endfor %}
                                     </div>
@@ -85,6 +87,10 @@
                                         Delete
                                     </button>
 
+
+                                    <a href="{% url 'UserData:notes_edit' pk %}" class="btn btn-outline-secondary ml-2">Edit</a>
+                                    
+                            
                                     <!-- Back button at the bottom right -->
                                     <a href="{% url 'UserData:notes_home' username2 %}" class="btn btn-outline-secondary ml-2">Back to Notes</a>
                                 </div>
