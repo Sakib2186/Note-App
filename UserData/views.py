@@ -116,7 +116,8 @@ def add_note(request, username):
 def note_description(request, pk):
     username=request.user.username
     note = UserNotes.objects.get(username=username,pk=pk)
-    
+    image_count = note.images.count()
+    column_size = 12 // image_count if image_count > 0 else 12 
      
     if request.method == 'POST':
         note.delete()
