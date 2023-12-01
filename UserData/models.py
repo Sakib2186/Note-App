@@ -13,21 +13,27 @@ class UserInfo(models.Model):
         return self.username
 
 class UserNotes(models.Model):
-    title=models.CharField(null=True,blank=True,max_length=50)
-    description=models.CharField(null=False,blank=False,max_length=500)
-    username=models.ForeignKey(UserInfo,null=False,blank=False,on_delete=models.CASCADE)
-    
-    class Meta:
-        verbose_name="User Notes"
-    def __str__(self) -> str:
-        return str(self.pk)   
-    
-class Notes_Images(models.Model):
-    note_id=models.ForeignKey(UserNotes,null=False,blank=False,on_delete=models.CASCADE)
-    image=models.ImageField(null=True,blank=True,upload_to='UserNotePictures/')
+    title = models.CharField(null=True, blank=True, max_length=50)
+    description = models.CharField(null=False, blank=False, max_length=500)
+    username = models.ForeignKey(UserInfo, null=False, blank=False, on_delete=models.CASCADE)
+
 
     class Meta:
-        verbose_name="Notes Images"
+        verbose_name = "User Notes"
+
     def __str__(self) -> str:
         return str(self.pk)
+
+
+class NoteImage(models.Model):
+    note = models.ForeignKey(UserNotes, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(null=True, blank=True, upload_to='UserNotePictures/')
+
+    class Meta:
+        verbose_name = "User Notes"
+
+    def __str__(self) -> str:
+        return str(self.pk)
+ 
     
+

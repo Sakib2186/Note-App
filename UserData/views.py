@@ -1,7 +1,8 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User,auth
-from .models import UserInfo,UserNotes,Notes_Images
+from .models import UserInfo,UserNotes, NoteImage
+
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
@@ -59,23 +60,43 @@ def notes_home(request,username):
     return render(request,'notes_home.html',context=context)
 
 @login_required
-def add_note(request,username):
-    if request.method=="POST":
-        title=request.POST['title']
-        note_description=request.POST['note_description']
-        image_file_list=request.FILES.getlist('image')
+def add_note(request, username):
+    if request.method == "POST":
+        title = request.POST['title']
+        note_description = request.POST['note_description']
+        files = request.FILES.getlist('image')  # Get a list of uploaded files
         user = request.user.username
-        new_note=UserNotes.objects.create(
-                title=title,
-                description=note_description,
-                username=UserInfo.objects.get(username=user)
-            )
-        new_note.save()
-        for i in image_file_list:
-            updating = Notes_Images.objects.create(note_id = new_note,image =i)
-            updating.save()
-        return redirect('UserData:notes_home',username)
-        print("notes taken")
-        
-        
-    return render(request,'add_note.html')
+
+        new_note = UserNotes.objects.create(
+            title=title,
+            description=note_description,
+            username=UserInfo.objects.get(username=user)
+        )
+
+        for file in files:
+            NoteImage.objects.create(note=new_note, image=file)
+
+        return redirect('UserData:notes_home', username)
+
+    return render(request, 'add_note.html')
+
+@login_required
+def note_description(request, pk):
+    note = get_object_or_404(UserNotes, pk=pk)
+    username=request.user.username
+     
+    if request.method == 'POST':
+        note.delete()
+        return redirect('UserData:notes_home', username)
+
+
+    context = {
+        'username2':username,
+        'note': note,
+    }
+
+    return render(request, 'note_description.html', context)
+
+
+
+
