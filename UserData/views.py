@@ -1,7 +1,8 @@
 from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User,auth
-from .models import UserInfo,UserNotes, NoteImage
+from .models import UserInfo,UserNotes, NoteImage,Notes_Label
+
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
@@ -50,6 +51,7 @@ def logout(request):
 
 @login_required
 def notes_home(request,username):
+    username=request.user.username
     get_all_notes=UserNotes.objects.filter(username=username)
     print(get_all_notes)
     context={
@@ -60,29 +62,61 @@ def notes_home(request,username):
 
 @login_required
 def add_note(request, username):
+
+    labels = Notes_Label.objects.all()
+
+
     if request.method == "POST":
-        title = request.POST['title']
-        note_description = request.POST['note_description']
-        files = request.FILES.getlist('image')  # Get a list of uploaded files
-        user = request.user.username
+        if request.POST.get('create_note'):
+            title = request.POST['title']
+            note_description = request.POST['note_description']
+            label = request.POST.getlist('label')
+            print(label)
+            files = request.FILES.getlist('image')  # Get a list of uploaded files
+            user = request.user.username
+            if len(label)==0:
+                new_note = UserNotes.objects.create(
+                    title=title,
+                    description=note_description,
+                    username=UserInfo.objects.get(username=user)
+                )
+                new_note.save()
+            else:
+                new_note = UserNotes.objects.create(
+                    title=title,
+                    description=note_description,
+                    username=UserInfo.objects.get(username=user)
+                )
+                string =""
+                for i in label:
+                    print(i)
+                    string = string + str(i) + ", "
+                print("String is "+ string)
+                new_note.note_label = string
+                new_note.save()
 
-        new_note = UserNotes.objects.create(
-            title=title,
-            description=note_description,
-            username=UserInfo.objects.get(username=user)
-        )
 
-        for file in files:
-            NoteImage.objects.create(note=new_note, image=file)
+            for file in files:
+                NoteImage.objects.create(note=new_note, image=file)
 
-        return redirect('UserData:notes_home', username)
+            return redirect('UserData:notes_home', username)
+    
+        if request.POST.get('add_labels'):
+            username=request.user.username
+            label_name = request.POST['label']
+            new_label = Notes_Label.objects.create(labelName=label_name,label_for =UserInfo.objects.get(username=username))
+            new_label.save()
 
-    return render(request, 'add_note.html')
+    
+    context={'label':labels,}
+
+    return render(request, 'add_note.html',context)
 
 @login_required
 def note_description(request, pk):
-    note = get_object_or_404(UserNotes, pk=pk)
     username=request.user.username
+    note = UserNotes.objects.get(username=username,pk=pk)
+    
      
     if request.method == 'POST':
         note.delete()
@@ -95,6 +129,7 @@ def note_description(request, pk):
     }
 
     return render(request, 'note_description.html', context)
+
 
 
 

@@ -28,6 +28,7 @@
                 <div class="box-body">
                     <h2>{{ note.title }}</h2>
                     <p>Username: {{ note.username }}</p>
+                    <p>Label(s):{{note.note_label}}</p>
                     <p>{{ note.description }}</p>
                 
                     {% if note.images.all %}
