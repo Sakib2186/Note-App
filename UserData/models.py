@@ -1,4 +1,5 @@
 from django.db import models
+from ckeditor.fields import RichTextField
 
 # Create your models here.
 
@@ -14,7 +15,7 @@ class UserInfo(models.Model):
 
 class UserNotes(models.Model):
     title = models.CharField(null=True, blank=True, max_length=50)
-    description = models.CharField(null=False, blank=False, max_length=500)
+    description = RichTextField()
     username = models.ForeignKey(UserInfo, null=False, blank=False, on_delete=models.CASCADE)
     note_label = models.CharField(null=True, blank=True, max_length=5000)
 

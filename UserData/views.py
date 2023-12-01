@@ -2,10 +2,13 @@ from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User,auth
 from .models import UserInfo,UserNotes, NoteImage,Notes_Label
+from django.conf import settings
+
 
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
+@login_required
 def landingPage(request):
     return render(request,'index.html')
 
@@ -62,7 +65,6 @@ def notes_home(request,username):
 
 @login_required
 def add_note(request, username):
-
     labels = Notes_Label.objects.all()
 
 
@@ -90,7 +92,7 @@ def add_note(request, username):
                 string =""
                 for i in label:
                     print(i)
-                    string = string + str(i) + ", "
+                    string = string + str(i) + " "
                 print("String is "+ string)
                 new_note.note_label = string
                 new_note.save()
@@ -108,7 +110,8 @@ def add_note(request, username):
             new_label.save()
 
     
-    context={'label':labels,}
+    context={'label':labels,
+             }
 
     return render(request, 'add_note.html',context)
 
@@ -126,11 +129,48 @@ def note_description(request, pk):
 
     context = {
         'username2':username,
+        'pk':pk,
         'note': note,
     }
 
     return render(request, 'note_description.html', context)
+@login_required
+def notes_edit(request,pk):
+    username=request.user.username
+    labels = Notes_Label.objects.all()
+    image = NoteImage.objects.filter(note = UserNotes.objects.get(pk=pk))
+    note = UserNotes.objects.get(username=username,pk=pk)
+    title = note.title
+    description = note.description
+    note_label = note.note_label
+    note_label = note_label.split()
+    print(note_label)
+    label = []
+    for i in labels:
+        label.append(i.labelName)
+    print(label)
 
+    if request.method == "POST":
+        if request.POST.get('add_labels'):
+            username=request.user.username
+            label_name = request.POST['label']
+            new_label = Notes_Label.objects.create(labelName=label_name,label_for =UserInfo.objects.get(username=username))
+            new_label.save()
+        
+
+
+
+
+
+    context = {'title':title,
+               'description':description,
+               'label':note_label,
+               'all_label':label,
+               'images':image,
+               'media_url':settings.MEDIA_URL,}
+
+
+    return render(request,"notes_edit.html",context)
 
 
 
