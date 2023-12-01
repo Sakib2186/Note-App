@@ -7,18 +7,28 @@
     <title>User Notes</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'notes_home.css' %}">
-</head>
-<body>
-    <div class="user_side">
-        <h1 class="w">Welcome {{username2}}</h1>
-        <div class="create_note">
-            <a href="{% url 'UserData:add_note' username2 %}" class="btn btn-outline-success txt-success rounded buttons">Take a New Note</a>
-        </div>
-        <div class="logout">
-            <a href="#" data-toggle="modal" data-target="#logoutModal" class="btn btn-outline-danger txt-danger rounded buttons">Logout</a>
-        </div>
-    </div>
+    <style>
+        .note-card  {
+            border-radius: 10px !important;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
+            transition: box-shadow 0.3s ease !important;
+        }
+    
+        .note-card:hover {
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px !important; /* Darker shadow on hover */
+        }
 
+        .form-control {
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
+            transition: box-shadow 0.3s ease !important;
+        }
+
+        .form-control:hover {
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px !important;
+        }
+    </style>
+</head>
+<body class="bg-white">
 
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -43,41 +53,53 @@
 
 
 
-    <div class="notes_container">
+     <!-- Main content -->
+     <div class="notes-container" style="width: 75%; margin: auto;">
         <div class="box">
             <div class="box-header">
-                <strong style="margin-left:5px;">Your Notes</strong>
                 <br><br>
-                <label style="margin-left:5px;">Search</label>
-                <input class="form-control w-75" type="text" id="searchInput" placeholder="Title, label, ...." onkeyup="searchTable()">
+                <h1 class="w">Welcome, {{username2}}</h1>
+                <br>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'UserData:add_note' username2 %}" class="btn btn-outline-success txt-success rounded buttons">Take a New Note</a>
+                    </div>
+                    <div>
+                        <a href="#" data-toggle="modal" data-target="#logoutModal" class="btn btn-outline-danger txt-danger rounded buttons">Logout</a>
+                    </div>
+                </div>
+                <br><br>
+                
+                <label>Search</label>
+                <div class="input-group w-100"> <!-- Change to w-100 to take 100% width of notes-container -->
+                    <input class="form-control bg-light" type="text" id="searchInput" placeholder="Title, label, ...." onkeyup="searchTable()">
+                </div>
                 <br><br>
             </div>
-            <div class="table-responsive" style="max-height:300px; overflow-y:auto;">
-                <table class="table table-bordered m-0 table7" style="text-align:center;" id="notesTable">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th style="text-align:center;">Title</th>
-                            <th style="text-align:center;">Notes</th>
-                            <th style="text-align:center;">Labels</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for note in all_notes %}
-                        <tr>
-                            <td><a href="{% url 'UserData:note_description' pk=note.pk%}">{{note.pk}}</a></td>
-                            <td>{{note.title}}</a></td>
-                            <td>{{note.description}}</td>
-                            <td>{{note.note_label}}</td>
-                        </tr>
-                        {% endfor %}
-                        
-                        <!-- Add more rows as needed -->
-                    </tbody>
-                </table>
+
+            <div class="container-fluid">
+                <div class="row">
+                    {% for note in all_notes %}
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3">
+                            <div class="card note-card bg-light" style="min-width: 150px;">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{note.pk}}. {{note.title}}</h5>
+                                    <p class="card-text">Label(s): {{note.note_label}}</p>
+                                    <p class="card-text" style="max-height: 100px; overflow: hidden;">{{note.description}}</p>
+                                    <a href="{% url 'UserData:note_description' pk=note.pk %}" style="position: absolute; top: 0; bottom: 0; left: 0; width: 100%;"></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if forloop.counter|divisibleby:6 and not forloop.last %}
+                            </div><div class="row">
+                        {% endif %}
+                    {% endfor %}
+                </div>
             </div>
+
+
         </div>
-        <!--Table Ends-->
     </div>
     
     <script>
@@ -113,3 +135,8 @@
 
 </body>
 </html>
+
+
+
+
+
