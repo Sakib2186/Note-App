@@ -192,12 +192,15 @@ def notes_edit(request,pk):
 
 
 
-    context = {'title':title,
-               'description':description,
-               'label':note_label,
-               'all_label':label,
-               'images':image,
-               'media_url':settings.MEDIA_URL,}
+    context = {
+            'username2':username,
+            'pk':pk,
+            'title':title,
+            'description':description,
+            'label':note_label,
+            'all_label':label,
+            'images':image,
+            'media_url':settings.MEDIA_URL,}
 
 
     return render(request,"notes_edit.html",context)

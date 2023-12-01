@@ -10,49 +10,58 @@
     <link rel="stylesheet" href="{% static 'add_note.css'%} ">
 
     <style>
-      /* Common styles for responsiveness */
-      .form-group {
-          margin-bottom: 15px;
-      }
-
-      .form-control,
-      .custom-file {
-          box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-          transition: box-shadow 0.3s ease;
-      }
-
-      .form-control:hover,
-      .custom-file-input:hover {
-          box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-      }
-
-      /* Default styles for centering */
-      .note_form {
-          width: 50%;
-          margin: auto;
-      }
-
-      /* Responsive adjustments */
-      @media only screen and (max-width: 1200px) {
-          .note_form {
-              width: 90%;
+        /* Common styles for responsiveness */
+        .form-group {
+            margin-bottom: 15px;
+        }
+  
+        .form-control,
+        .custom-file {
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+            transition: box-shadow 0.3s ease;
+        }
+  
+        .form-control:hover,
+        .custom-file-input:hover {
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        }
+  
+        /* Default styles for centering */
+        .note_form {
+            width: 50%;
+            margin: auto;
+        }
+  
+        /* Responsive adjustments */
+        @media only screen and (max-width: 1200px) {
+            .note_form {
+                width: 90%;
+            }
+        }
+  
+        @media only screen and (max-width: 768px) {
+            .note_form {
+                width: 95%;
+            }
+  
+            .form-group.row {
+                flex-direction: column;
+            }
+  
+            .custom-file {
+                margin-bottom: 10px;
+            }
+        }
+  
+        .selected-image-container {
+          max-width: 200px; /* Set the maximum width for the image container */
           }
-      }
-
-      @media only screen and (max-width: 768px) {
-          .note_form {
-              width: 95%;
+          
+          .selected-image {
+              max-width: 100%; /* Make the image responsive within its container */
+              height: auto;    /* Maintain the aspect ratio */
           }
-
-          .form-group.row {
-              flex-direction: column;
-          }
-
-          .custom-file {
-              margin-bottom: 10px;
-          }
-      }
-  </style>
+    </style>
 </head>
 <body class="bg-white">
     <div class="page_title text-center mt-4">
@@ -104,14 +113,22 @@
                         <p>Uploaded images</p>
                         <input type="hidden" name="selected_images" id="selected-images">
                         {% for i in images %}
-                            <img class="selected-image" src="{{media_url}}{{i.image}}">  
+                            <img class="selected-images" src="{{media_url}}{{i.image}}">  
                         {% endfor %}
                         <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple images.</small>
                     </div>
                     
-                    <div class="form-group text-right">
-                        <input type="submit" class="btn btn-outline-success txt-success rounded buttons" name="edit_note" value="Create">
+                    
+                    <!-- Move buttons to the bottom with flexbox -->
+                    <div class="mt-3 d-flex justify-content-between">
+                        <!-- Delete button at the bottom left -->
+                        <div class="btn-group" role="group">
+                            <input type="submit" class="btn btn-outline-warning txt-success rounded buttons" name="edit_note" value="Update">
+                        </div>
+                        <!-- Back button at the bottom right -->
+                        <a href="{% url 'UserData:notes_home' username2 %}" class="btn btn-outline-secondary ml-2">Back to Notes</a>
                     </div>
+                    <br><br>
                 </form>
             </div>
         </div>
@@ -150,30 +167,41 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-      $(document).ready(function() {
-          $('#image-input').on('change', function() {
-              var container = $('#selected-images-container');
-              container.empty();
-  
-              var input = $(this)[0];
-              var files = input.files;
-  
-              for (var i = 0; i < files.length; i++) {
-                  var file = files[i];
-                  var reader = new FileReader();
-  
-                  reader.onload = function(e) {
-                      var imageContainer = $('<div class="selected-image-container"></div>');
-                      var image = $('<img class="selected-image" src="' + e.target.result + '">');
-                      
-                      imageContainer.append(image);
-                      container.append(imageContainer);
-                  };
-  
-                  reader.readAsDataURL(file);
-              }
-          });
-      });
+        $(document).ready(function () {
+            $('#image-input').on('change', function () {
+                var container = $('#selected-images-container');
+                container.empty();
+        
+                var input = $(this)[0];
+                var files = input.files;
+        
+                var rowContainer = $('<div class="row"></div>'); // New row container
+        
+                for (var i = 0; i < files.length; i++) {
+                    var file = files[i];
+                    var reader = new FileReader();
+        
+                    (function (index) { // Use a self-invoking function to capture the correct index value
+                        reader.onload = function (e) {
+                            var imageContainer = $('<div class="selected-image-container col-md-4"></div>'); // Three columns
+                            var image = $('<img class="selected-image" src="' + e.target.result + '">');
+        
+                            imageContainer.append(image);
+                            rowContainer.append(imageContainer);
+        
+                            // Create a new row container after every three images
+                            if ((index + 1) % 3 === 0 || index === files.length - 1) {
+                                container.append(rowContainer);
+                                rowContainer = $('<div class="row"></div>');
+                            }
+                        };
+                    })(i); // Pass the current index to the self-invoking function
+        
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+        
   </script>
   
 
