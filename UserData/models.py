@@ -17,6 +17,7 @@ class UserNotes(models.Model):
     description = models.CharField(null=False, blank=False, max_length=500)
     username = models.ForeignKey(UserInfo, null=False, blank=False, on_delete=models.CASCADE)
 
+
     class Meta:
         verbose_name = "User Notes"
 
@@ -33,3 +34,6 @@ class NoteImage(models.Model):
 
     def __str__(self) -> str:
         return str(self.pk)
+ 
+    
+

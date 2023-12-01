@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User,auth
 from .models import UserInfo,UserNotes, NoteImage
+
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
@@ -95,6 +96,7 @@ def note_description(request, pk):
     }
 
     return render(request, 'note_description.html', context)
+
 
 
 
