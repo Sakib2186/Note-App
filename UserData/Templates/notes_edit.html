@@ -1,0 +1,181 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Notes</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="{% static 'add_note.css'%} ">
+
+    <style>
+      /* Common styles for responsiveness */
+      .form-group {
+          margin-bottom: 15px;
+      }
+
+      .form-control,
+      .custom-file {
+          box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+          transition: box-shadow 0.3s ease;
+      }
+
+      .form-control:hover,
+      .custom-file-input:hover {
+          box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      }
+
+      /* Default styles for centering */
+      .note_form {
+          width: 50%;
+          margin: auto;
+      }
+
+      /* Responsive adjustments */
+      @media only screen and (max-width: 1200px) {
+          .note_form {
+              width: 90%;
+          }
+      }
+
+      @media only screen and (max-width: 768px) {
+          .note_form {
+              width: 95%;
+          }
+
+          .form-group.row {
+              flex-direction: column;
+          }
+
+          .custom-file {
+              margin-bottom: 10px;
+          }
+      }
+  </style>
+</head>
+<body class="bg-white">
+    <div class="page_title text-center mt-4">
+      <br><br>
+        <h1 class="w">Edit Note</h1>
+        <br>
+    </div>
+    <div class="note_form">
+        <div class="box mt-4">
+            <div class="box-divider m-0"></div>
+            <div class="box-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input name="title" type="text" class="form-control bg-light" id="title" placeholder="Note Title" value="{{title}}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="noteDescription">Note Description</label>
+                        <textarea name="note_description" class="form-control bg-light" id="noteDescription" placeholder="Add your note" rows="5" >{{description}}</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="labels">Select labels (multiple)</label>
+                        <select id="labels" name="label" class="form-control bg-light" multiple>
+                            <option value="">-----------</option>
+                            {% for i in all_label %}
+                                {% if i in label %}
+                                    <option value="{{ i }}" selected>{{ i }}</option>
+                                {% else %}
+                                    <option value="{{ i }}">{{ i }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                        <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple labels.</small>
+                        <button type="button" class="btn btn-outline-success rounded buttons mt-2" data-toggle="modal" data-target="#deleteModal">Add Label</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="images">Add Images</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="image-input" name="image" multiple>
+                            <label class="custom-file-label bg-light" for="image-input">Choose files</label>
+                        </div>
+                        <div id="selected-images-container"></div>
+                        <br>
+                        <p>Uploaded images</p>
+                        <input type="hidden" name="selected_images" id="selected-images">
+                        {% for i in images %}
+                            <img class="selected-image" src="{{media_url}}{{i.image}}">  
+                        {% endfor %}
+                        <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple images.</small>
+                    </div>
+                    
+                    <div class="form-group text-right">
+                        <input type="submit" class="btn btn-outline-success txt-success rounded buttons" name="create_note" value="Create">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+      <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLabel">Add Label</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                  <form method="POST">
+                    {% csrf_token %}
+                  
+                  <label for="label">Label:</label>
+                  <input type="text" id="label" name="label">
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-outline-success txt-success rounded buttons" name="add_labels" value="Add">Add</button>
+                  <button  class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+              </form>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+      $(document).ready(function() {
+          $('#image-input').on('change', function() {
+              var container = $('#selected-images-container');
+              container.empty();
+  
+              var input = $(this)[0];
+              var files = input.files;
+  
+              for (var i = 0; i < files.length; i++) {
+                  var file = files[i];
+                  var reader = new FileReader();
+  
+                  reader.onload = function(e) {
+                      var imageContainer = $('<div class="selected-image-container"></div>');
+                      var image = $('<img class="selected-image" src="' + e.target.result + '">');
+                      
+                      imageContainer.append(image);
+                      container.append(imageContainer);
+                  };
+  
+                  reader.readAsDataURL(file);
+              }
+          });
+      });
+  </script>
+  
+
+</body>
+</html>
