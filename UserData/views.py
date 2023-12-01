@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User,auth
 from .models import UserInfo,UserNotes, NoteImage,Notes_Label
 
+
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
@@ -62,7 +63,6 @@ def notes_home(request,username):
 
 @login_required
 def add_note(request, username):
-
     labels = Notes_Label.objects.all()
 
 
@@ -108,7 +108,8 @@ def add_note(request, username):
             new_label.save()
 
     
-    context={'label':labels,}
+    context={'label':labels,
+             }
 
     return render(request, 'add_note.html',context)
 
