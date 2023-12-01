@@ -7,8 +7,8 @@
     <title>Login Page</title>
     <link rel="stylesheet" href="{% static 'login.css'%}">
 </head>
-<body>
-    <div class="container">
+<body class="bg-white">
+    <div class="container bg-light">
         <div class="login-form">
             <h1 style="margin-bottom: 5vh;">Login</h1>
             <form method="POST">
@@ -20,7 +20,7 @@
                 <input type="password" id="password" name="password">
                 <input type="submit" value="Login" name="login"></input>
 
-                <p>Don't have an Account? <span><a href="signup.html">Signup</a></span></p>
+                <p>Don't have an Account? <span><a href="{% url 'UserData:signup' %}">Signup</a></span></p>
             </form>
         </div>
     </div>

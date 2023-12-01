@@ -71,14 +71,14 @@
                 <br><br>
                 
                 <label>Search</label>
-                <div class="input-group w-100"> <!-- Change to w-100 to take 100% width of notes-container -->
+                <div class="input-group w-100">
                     <input class="form-control bg-light" type="text" id="searchInput" placeholder="Title, label, ...." onkeyup="searchTable()">
                 </div>
                 <br><br>
             </div>
 
             <div class="container-fluid">
-                <div class="row">
+                <div class="row" id="notesTable">
                     {% for note in all_notes %}
                         <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3">
                             <div class="card note-card bg-light" style="min-width: 150px;">
@@ -105,29 +105,31 @@
     <script>
         function searchTable() {
             // Declare variables
-            var input, filter, table, tr, td, i, txtValue;
+            var input, filter, cards, i, title, label, description, pk, txtContent;
             input = document.getElementById("searchInput");
             filter = input.value.toUpperCase();
-            table = document.getElementById("notesTable");
-            tr = table.getElementsByTagName("tr");
+            cards = document.getElementsByClassName("col-lg-2"); // Assuming each card is wrapped in a col-lg-2 div
     
-            // Loop through all table rows, and hide those that don't match the search query
-            for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td");
-                for (var j = 0; j < td.length; j++) {
-                    if (td[j]) {
-                        txtValue = td[j].textContent || td[j].innerText;
-                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                            tr[i].style.display = "";
-                            break;
-                        } else {
-                            tr[i].style.display = "none";
-                        }
+            // Loop through all cards, and hide/show based on the search query
+            for (i = 0; i < cards.length; i++) {
+                title = cards[i].getElementsByClassName("card-title")[0];
+                label = cards[i].getElementsByClassName("card-text")[0];
+                description = cards[i].getElementsByClassName("card-text")[1]; // Assuming description is the second card-text element
+                pk = cards[i].getElementsByClassName("card-title")[0].innerText.split(".")[0]; // Extracting PK from the title
+    
+                if (title && label && description) {
+                    txtContent = (pk + title.textContent + label.textContent + description.textContent).toUpperCase();
+    
+                    if (txtContent.indexOf(filter) > -1) {
+                        cards[i].style.display = "block"; // Show the card
+                    } else {
+                        cards[i].style.display = "none"; // Hide the card
                     }
                 }
             }
         }
     </script>
+    
     <script src="index.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
