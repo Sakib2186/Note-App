@@ -5,28 +5,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup Page</title>
-    <link rel="stylesheet" href="{% static 'login.css' %}">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Your custom CSS -->
+    <link rel="stylesheet" href="/static/login.css?{% now "U" %}"/>
 </head>
-<body>
-    <div class="container">
+<body class="bg-white">
+    <div class="container bg-light">
         <div class="login-form">
             <h1 style="margin-bottom: 5vh;">Signup</h1>
             <form method="POST">
                 {% csrf_token %}
-                <label for="username">Email:</label>
-                <input type="email" id="email" name="email" required>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
 
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                </div>
 
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password">
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" class="form-control" id="password" name="password">
+                </div>
 
-                <label for="password">Confirm Password:</label>
-                <input type="password" id="password" name="confirm_password">
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password:</label>
+                    <input type="password" class="form-control" id="confirm_password" name="confirm_password">
+                </div>
                 
-                <button type="submit">Signup</button>
-                <p>Already have an Account? <span><a href="{% url 'UserData:login' %}">Login</a></span></p>
+                <button type="submit" class="btn btn-outline-success">Signup</button>
+                <p>Already have an Account? <span><a class="link-secondary" href="{% url 'UserData:login' %}" >Login</a></span></p>
                 
                 {% for message in messages  %}
                     <p>{{message}}</p>
@@ -36,6 +47,11 @@
         </div>
     </div>
     
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <script src="script.js"></script>
 </body>
 </html>
