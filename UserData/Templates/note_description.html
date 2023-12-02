@@ -146,7 +146,7 @@
                                 <h2>{{ note.title }}</h2>
                                 <p>Username: {{ note.username | safe }}</p>
                                 <p>Label(s): {{note.note_label | safe}}</p>
-                                <p>Posted on {{ note.created_at|date:"F j, Y H:i" }}</p>
+                                <p>Posted on {{ note.created_at|date:"F j, Y" }} at {{ note.created_at|time:"g:i A" }}</p>
                                 <p class="card-text" >{{ note.description | safe}}</p>
 
                                 {% if note.images.all %}
