@@ -68,7 +68,8 @@ def notes_home(request,username):
 
 @login_required
 def add_note(request, username):
-    labels = Notes_Label.objects.all()
+    user = request.user.username
+    labels = Notes_Label.objects.filter(label_for=UserInfo.objects.get(username=user))
     form = NoteForm()
 
     if request.method == "POST":
@@ -79,7 +80,7 @@ def add_note(request, username):
             label = request.POST.getlist('label')
             print(label)
             files = request.FILES.getlist('image')  # Get a list of uploaded files
-            user = request.user.username
+            
             if len(label)==0:
                 new_note = UserNotes.objects.create(
                     title=title,
@@ -113,6 +114,7 @@ def add_note(request, username):
             label_name = request.POST['label']
             new_label = Notes_Label.objects.create(labelName=label_name,label_for =UserInfo.objects.get(username=username))
             new_label.save()
+             
 
     
     context={'label':labels,
@@ -144,7 +146,7 @@ def notes_edit(request,pk):
     instance = get_object_or_404(UserNotes, pk=pk)
     form = NoteForm(request.POST or None, instance=instance)
     username = request.user.username
-    labels = Notes_Label.objects.all()
+    labels = Notes_Label.objects.filter(label_for=UserInfo.objects.get(username=username))
     image = NoteImage.objects.filter(note = UserNotes.objects.get(pk=pk))
     note = UserNotes.objects.get(username=username,pk=pk)
     title = note.title
@@ -167,6 +169,7 @@ def notes_edit(request,pk):
             label_name = request.POST['label']
             new_label = Notes_Label.objects.create(labelName=label_name,label_for =UserInfo.objects.get(username=username))
             new_label.save()
+            return redirect('UserData:note_description',pk) 
 
         if request.POST.get('edit_note'):
             title = request.POST['title']
