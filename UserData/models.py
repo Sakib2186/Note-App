@@ -19,6 +19,7 @@ class UserNotes(models.Model):
     description = RichTextField()
     username = models.ForeignKey(UserInfo, null=False, blank=False, on_delete=models.CASCADE)
     note_label = models.CharField(null=True, blank=True, max_length=5000)
+    date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = "User Notes"

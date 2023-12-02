@@ -5,6 +5,7 @@ from .models import UserInfo,UserNotes, NoteImage,Notes_Label
 from django.conf import settings
 from django.utils import timezone
 import os
+import datetime
 
 from django.contrib.auth.decorators import login_required
 # Create your views here.
@@ -190,6 +191,7 @@ def notes_edit(request,pk):
                 print(i)
                 string = string + str(i) + " "
             note.note_label = string
+            note.date = datetime.datetime.now()
             note.save()
             return redirect('UserData:note_description',pk)
 
