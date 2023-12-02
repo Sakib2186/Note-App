@@ -75,7 +75,7 @@ def add_note(request, username):
         if request.POST.get('create_note'):
             title = request.POST['title']
             created_at=timezone.now()
-            note_description = request.POST['note_description']
+            note_description = request.POST['description']
             label = request.POST.getlist('label')
             print(label)
             files = request.FILES.getlist('image')  # Get a list of uploaded files
@@ -141,7 +141,8 @@ def note_description(request, pk):
     return render(request, 'note_description.html', context)
 @login_required
 def notes_edit(request,pk):
-    form = NoteForm()
+    instance = get_object_or_404(UserNotes, pk=pk)
+    form = NoteForm(request.POST or None, instance=instance)
     username = request.user.username
     labels = Notes_Label.objects.all()
     image = NoteImage.objects.filter(note = UserNotes.objects.get(pk=pk))
@@ -169,7 +170,7 @@ def notes_edit(request,pk):
 
         if request.POST.get('edit_note'):
             title = request.POST['title']
-            note_description = request.POST['note_description']
+            note_description = request.POST['description']
             label = request.POST.getlist('label')
             files = request.FILES.getlist('image')
             print(label)
@@ -185,7 +186,7 @@ def notes_edit(request,pk):
 
 
             note.title = title
-            note.created_at=created_at
+            note.created_at=datetime.datetime.now()
             note.description = note_description
             string =""
             for i in label:
