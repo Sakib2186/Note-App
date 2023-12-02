@@ -134,17 +134,17 @@
                         <div class="card bg-light h-100">
                             <div class="card-body">
                                 <h2>{{ note.title }}</h2>
-                                <p>Username: {{ note.username }}</p>
-                                <p>Label(s): {{note.note_label}}</p>
+                                <p>Username: {{ note.username | safe }}</p>
+                                <p>Label(s): {{note.note_label | safe}}</p>
                                 <p>Posted on {{ note.created_at|date:"F j, Y H:i" }}</p>
-                                <p class="card-text" >{{ note.description }}</p>
+                                <p class="card-text" >{{ note.description | safe}}</p>
 
                                 {% if note.images.all %}
                                 <div class="masonry-container">
                                     {% for image in note.images.all %}
                                         <div class="masonry-item">
                                             {% if image.image.url != None %}
-                                                <a data-fancybox="note-gallery" href="{{ image.image.url }}" data-caption="{{ note.title }}">
+                                                <a data-fancybox="note-gallery" href="{{ image.image.url }}" data-caption="{{ note.title | safe }}">
                                                     <img src="{{ image.image.url }}" alt="{{ note.title }}">
                                                 </a>
                                             {% endif %}

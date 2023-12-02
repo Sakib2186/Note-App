@@ -8,7 +8,7 @@ class UserInfo(admin.ModelAdmin):
 
 @admin.register(UserNotes)
 class UserNotes(admin.ModelAdmin):
-    list_display = ['pk','username','title','note_label','date']
+    list_display = ['pk','username','title','note_label']
 
 @admin.register(NoteImage)
 class NoteImage(admin.ModelAdmin):
