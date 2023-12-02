@@ -15,6 +15,7 @@ class UserInfo(models.Model):
 
 class UserNotes(models.Model):
     title = models.CharField(null=True, blank=True, max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
     description = RichTextField()
     username = models.ForeignKey(UserInfo, null=False, blank=False, on_delete=models.CASCADE)
     note_label = models.CharField(null=True, blank=True, max_length=5000)

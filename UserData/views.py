@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User,auth
 from .models import UserInfo,UserNotes, NoteImage,Notes_Label
 from django.conf import settings
+from django.utils import timezone
 import os
 
 from django.contrib.auth.decorators import login_required
@@ -71,6 +72,7 @@ def add_note(request, username):
     if request.method == "POST":
         if request.POST.get('create_note'):
             title = request.POST['title']
+            created_at=timezone.now()
             note_description = request.POST['note_description']
             label = request.POST.getlist('label')
             print(label)
@@ -79,6 +81,7 @@ def add_note(request, username):
             if len(label)==0:
                 new_note = UserNotes.objects.create(
                     title=title,
+                    created_at=created_at,
                     description=note_description,
                     username=UserInfo.objects.get(username=user)
                 )
@@ -163,6 +166,7 @@ def notes_edit(request,pk):
 
         if request.POST.get('edit_note'):
             title = request.POST['title']
+            created_at=timezone.now()
             note_description = request.POST['note_description']
             label = request.POST.getlist('label')
             files = request.FILES.getlist('image')
@@ -179,6 +183,7 @@ def notes_edit(request,pk):
 
 
             note.title = title
+            note.created_at=created_at
             note.description = note_description
             string =""
             for i in label:

@@ -26,6 +26,59 @@
         .form-control:hover {
             box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px !important;
         }
+
+        
+
+        .masonry-container {
+            column-count: 3;
+            column-gap: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .masonry-item {
+            width: 100%;
+            height: auto;
+            display: block;
+            break-inside: avoid;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .masonry-item:hover {
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+        }
+
+        @media (max-width: 576px) {
+            .masonry-item {
+                width: 100%;
+            }
+            .masonry-container {
+                column-count: 1;
+            }
+        }
+
+        @media (min-width: 576px) {
+            .masonry-container {
+                column-count: 2;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .masonry-container {
+                column-count: 3;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .masonry-container {
+                column-count: 4;
+            }
+        }
+        
     </style>
 </head>
 <body class="bg-white">
@@ -77,26 +130,21 @@
                 <br><br>
             </div>
 
-            <div class="container-fluid">
-                <div class="row" id="notesTable">
-                    {% for note in all_notes %}
-                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3">
-                            <div class="card note-card bg-light" style="min-width: 150px;">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{note.pk}}. {{note.title}}</h5>
-                                    <p class="card-text">Label(s): {{note.note_label}}</p>
-                                    <p class="card-text" style="max-height: 100px; overflow: hidden;">{{note.description}}</p>
-                                    <a href="{% url 'UserData:note_description' pk=note.pk %}" style="position: absolute; top: 0; bottom: 0; left: 0; width: 100%;"></a>
-                                </div>
-                            </div>
+            
+            <div class="masonry-container" id="notesTable">
+                {% for note in all_notes %}
+                    <div class="card note-card bg-light masonry-item">
+                        <div class="card-body">
+                            <h5 class="card-title">{{note.pk}}. {{note.title}}</h5>
+                            <p>Posted on {{ note.created_at|date:"F j, Y H:i" }}</p>
+                            <p class="card-text">Label(s): {{note.note_label}}</p>
+                            <p class="card-text" style="max-height: 100px; overflow: hidden;">{{note.description}}</p>
+                            <a href="{% url 'UserData:note_description' pk=note.pk %}" style="position: absolute; top: 0; bottom: 0; left: 0; width: 100%;"></a>
                         </div>
-
-                        {% if forloop.counter|divisibleby:6 and not forloop.last %}
-                            </div><div class="row">
-                        {% endif %}
-                    {% endfor %}
-                </div>
+                    </div>
+                {% endfor %}
             </div>
+            
 
 
         </div>
@@ -108,7 +156,7 @@
             var input, filter, cards, i, title, label, description, pk, txtContent;
             input = document.getElementById("searchInput");
             filter = input.value.toUpperCase();
-            cards = document.getElementsByClassName("col-lg-2"); // Assuming each card is wrapped in a col-lg-2 div
+            cards = document.getElementsByClassName("note-card"); // Assuming each card is wrapped in a col-lg-2 div
     
             // Loop through all cards, and hide/show based on the search query
             for (i = 0; i < cards.length; i++) {
@@ -130,10 +178,10 @@
         }
     </script>
     
-    <script src="index.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 
 </body>
 </html>
