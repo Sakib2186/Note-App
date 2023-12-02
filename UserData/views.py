@@ -97,7 +97,7 @@ def add_note(request, username):
                 string =""
                 for i in label:
                     print(i)
-                    string = string + str(i) + " "
+                    string = string + str(i) + ","
                 print("String is "+ string)
                 new_note.note_label = string
                 new_note.save()
@@ -152,7 +152,7 @@ def notes_edit(request,pk):
     note_label = note.note_label
     print(note_label)
     try:
-        note_label = note_label.split()
+        note_label = note_label.split(",")
     except:
         note_label=[]
     
@@ -191,7 +191,7 @@ def notes_edit(request,pk):
             string =""
             for i in label:
                 print(i)
-                string = string + str(i) + " "
+                string = string + str(i) + ","
             note.note_label = string
             note.date = datetime.datetime.now()
             note.save()
