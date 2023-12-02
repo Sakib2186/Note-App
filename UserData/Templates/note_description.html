@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'add_note.css' %}">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" />
+
     <style>
         /* Additional styles for centering the page */
         body {
@@ -51,6 +56,71 @@
             width: 100%;
             height: auto;
         }
+
+        .fancybox-button svg {
+            fill: none;
+            stroke: currentColor;
+        }
+    
+        .fancybox-button {
+            background: none;
+        }
+
+        .masonry-container {
+            column-count: 3;
+            column-gap: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .masonry-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .masonry-item:hover {
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+        }
+
+        @media (max-width: 576px) {
+            .masonry-item {
+                width: 100%;
+            }
+            .masonry-container {
+                column-count: 1;
+            }
+        }
+
+        @media (min-width: 576px) {
+            .masonry-container {
+                column-count: 2;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .masonry-container {
+                column-count: 3;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .masonry-container {
+                column-count: 4;
+            }
+        }
+
+        
+
     </style>
 </head>
 <body class="bg-white">
@@ -66,21 +136,22 @@
                                 <h2>{{ note.title }}</h2>
                                 <p>Username: {{ note.username }}</p>
                                 <p>Label(s): {{note.note_label}}</p>
+                                <p>Posted on {{ note.created_at|date:"F j, Y H:i" }}</p>
                                 <p class="card-text" >{{ note.description }}</p>
 
                                 {% if note.images.all %}
-                                <div class="row mt-3 center-images resize-images">
+                                <div class="masonry-container">
                                     {% for image in note.images.all %}
-                                        <div class="col-md-4 mb-3">
+                                        <div class="masonry-item">
                                             {% if image.image.url != None %}
-                                                <img src="{{ image.image.url }}" alt="{{ note.title }}" class="img-fluid">
+                                                <a data-fancybox="note-gallery" href="{{ image.image.url }}" data-caption="{{ note.title }}">
+                                                    <img src="{{ image.image.url }}" alt="{{ note.title }}">
+                                                </a>
                                             {% endif %}
                                         </div>
-                                        {% if forloop.counter|divisibleby:3 and not forloop.last %}
-                                            </div><div class="row mt-3 center-images resize-images">
-                                        {% endif %}
                                     {% endfor %}
                                 </div>
+                                
                                 {% endif %}
 
                                 <!-- Move buttons to the bottom with flexbox -->
@@ -138,6 +209,37 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+    <script>
+    $(document).ready(function () {
+        $('[data-fancybox="note-gallery"]').fancybox({
+            buttons: [
+                {
+                    tpl: '<button data-fancybox-prev class="fancybox-button fancybox-button--arrow-left" title="{{PREV}}">' +
+                        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                        '<line x1="15" y1="18" x2="9" y2="12"></line>' +
+                        '<line x1="9" y1="12" x2="15" y2="6"></line>' +
+                        '</svg>' +
+                        '</button>',
+                },
+                {
+                    tpl: '<button data-fancybox-next class="fancybox-button fancybox-button--arrow-right" title="{{NEXT}}">' +
+                        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                        '<line x1="9" y1="18" x2="15" y2="12"></line>' +
+                        '<line x1="15" y1="12" x2="9" y2="6"></line>' +
+                        '</svg>' +
+                        '</button>',
+                },
+                'fullScreen',
+                'thumbs',
+            ],
+            protect: true // Prevent right-click downloads
+        });
+    });
+</script>
+
 </body>
 </html>
 
