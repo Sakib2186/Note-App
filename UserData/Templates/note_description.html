@@ -11,6 +11,41 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" />
 
+
+    <!-- Add this script inside the <head> tag to adjust the number of columns -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var numberOfImages = document.querySelectorAll('.masonry-item').length;
+
+        // Adjust the number of columns based on the screen width and the number of images
+        function adjustColumns() {
+            var screenWidth = window.innerWidth;
+
+            if (screenWidth < 576) {
+                setColumns(1);
+            } else if (screenWidth < 768) {
+                setColumns(Math.min(2, numberOfImages));
+            } else if (screenWidth < 992) {
+                setColumns(Math.min(3, numberOfImages));
+            } else {
+                setColumns(Math.min(4, numberOfImages));
+            }
+        }
+
+        // Helper function to set the column count
+        function setColumns(columnCount) {
+            document.querySelector('.masonry-container').style.columnCount = columnCount;
+        }
+
+        // Initial adjustment
+        adjustColumns();
+
+        // Adjust columns on window resize
+        window.addEventListener("resize", adjustColumns);
+    });
+</script>
+
+
     <style>
         /* Additional styles for centering the page */
         body {
@@ -92,32 +127,7 @@
             box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
         }
 
-        @media (max-width: 576px) {
-            .masonry-item {
-                width: 100%;
-            }
-            .masonry-container {
-                column-count: 1;
-            }
-        }
-
-        @media (min-width: 576px) {
-            .masonry-container {
-                column-count: 2;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .masonry-container {
-                column-count: 3;
-            }
-        }
-
-        @media (min-width: 992px) {
-            .masonry-container {
-                column-count: 4;
-            }
-        }
+        
 
         
 

@@ -116,7 +116,8 @@ def add_note(request, username):
 
     
     context={'label':labels,
-             'form':form}
+             'form':form,
+             'username2':username}
 
     return render(request, 'add_note.html',context)
 
@@ -139,6 +140,8 @@ def note_description(request, pk):
     }
 
     return render(request, 'note_description.html', context)
+
+
 @login_required
 def notes_edit(request,pk):
     instance = get_object_or_404(UserNotes, pk=pk)
