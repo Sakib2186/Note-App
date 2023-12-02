@@ -5,6 +5,7 @@ from .models import UserInfo,UserNotes, NoteImage,Notes_Label
 from django.conf import settings
 import os
 import datetime
+from . forms import NoteForm
 
 from django.contrib.auth.decorators import login_required
 # Create your views here.
@@ -67,12 +68,12 @@ def notes_home(request,username):
 @login_required
 def add_note(request, username):
     labels = Notes_Label.objects.all()
-
+    form = NoteForm()
 
     if request.method == "POST":
         if request.POST.get('create_note'):
             title = request.POST['title']
-            note_description = request.POST['note_description']
+            note_description = request.POST['description']
             label = request.POST.getlist('label')
             print(label)
             files = request.FILES.getlist('image')  # Get a list of uploaded files
@@ -112,7 +113,7 @@ def add_note(request, username):
 
     
     context={'label':labels,
-             }
+             'form':form}
 
     return render(request, 'add_note.html',context)
 
@@ -137,6 +138,7 @@ def note_description(request, pk):
     return render(request, 'note_description.html', context)
 @login_required
 def notes_edit(request,pk):
+    form = NoteForm()
     username = request.user.username
     labels = Notes_Label.objects.all()
     image = NoteImage.objects.filter(note = UserNotes.objects.get(pk=pk))
@@ -164,7 +166,7 @@ def notes_edit(request,pk):
 
         if request.POST.get('edit_note'):
             title = request.POST['title']
-            note_description = request.POST['note_description']
+            note_description = request.POST['description']
             label = request.POST.getlist('label')
             files = request.FILES.getlist('image')
             print(label)
@@ -191,13 +193,6 @@ def notes_edit(request,pk):
             return redirect('UserData:note_description',pk)
 
 
-
-        
-
-
-
-
-
     context = {
             'username2':username,
             'pk':pk,
@@ -206,7 +201,8 @@ def notes_edit(request,pk):
             'label':note_label,
             'all_label':label,
             'images':image,
-            'media_url':settings.MEDIA_URL,}
+            'media_url':settings.MEDIA_URL,
+            'form':form}
 
 
     return render(request,"notes_edit.html",context)

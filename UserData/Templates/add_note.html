@@ -82,8 +82,9 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="noteDescription">Note Description</label>
-                        <textarea name="note_description" class="form-control bg-light" id="noteDescription" placeholder="Add your note" rows="5"></textarea>
+                        <label for="noteDescription"></label>
+                        {{form.media | safe | linebreaks}}
+                        {{form.as_p | safe | linebreaks }}
                     </div>
                     
                     <div class="form-group">
