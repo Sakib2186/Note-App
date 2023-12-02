@@ -31,6 +31,48 @@
             width: 50%;
             margin: auto;
         }
+
+
+
+        .selected-image-container {
+            max-width: 200px; /* Set the maximum width for the image container */
+        }
+          
+        .selected-image {
+            max-width: 100%; /* Make the image responsive within its container */
+            height: auto;    /* Maintain the aspect ratio */
+        }
+
+
+
+        .masonry-container {
+            column-count: 3;
+            column-gap: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .masonry-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .masonry-item:hover {
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+        }
+
+
+
   
         /* Responsive adjustments */
         @media only screen and (max-width: 1200px) {
@@ -53,14 +95,34 @@
             }
         }
   
-        .selected-image-container {
-          max-width: 200px; /* Set the maximum width for the image container */
-          }
-          
-          .selected-image {
-              max-width: 100%; /* Make the image responsive within its container */
-              height: auto;    /* Maintain the aspect ratio */
-          }
+        
+
+        @media (max-width: 576px) {
+            .masonry-item {
+                width: 100%;
+            }
+            .masonry-container {
+                column-count: 1;
+            }
+        }
+
+        @media (min-width: 576px) {
+            .masonry-container {
+                column-count: 2;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .masonry-container {
+                column-count: 3;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .masonry-container {
+                column-count: 4;
+            }
+        }
     </style>
 </head>
 <body class="bg-white">
@@ -77,7 +139,7 @@
                     {% csrf_token %}
                     
                     <div class="form-group">
-                        <label for="title">Title</label>
+                        <label for="title">Title:</label>
                         <input name="title" type="text" class="form-control bg-light" id="title" placeholder="Note Title" value="{{title}}">
                     </div>
                     
@@ -88,7 +150,7 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="labels">Select labels (multiple)</label>
+                        <label for="labels">Select labels (multiple):</label>
                         <select id="labels" name="label" class="form-control bg-light" multiple>
                             <option value="None">-----------</option>
                             {% for i in all_label %}
@@ -104,20 +166,29 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="images">Update Images</label>
+                        <label for="images">Update Images:</label>
                         <small class="form-text text-muted mt-1">Will remove all existing images</small>
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" id="image-input" name="image" multiple>
                             <label class="custom-file-label bg-light" for="image-input">Choose files</label>
                         </div>
+                        <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple images.</small>
                         <div id="selected-images-container"></div>
                         <br>
-                        <p>Uploaded images</p>
+
+                        <p>Uploaded images:</p>
                         <input type="hidden" name="selected_images" id="selected-images">
-                        {% for i in images %}
-                            <img class="selected-images" src="{{media_url}}{{i.image}}">  
-                        {% endfor %}
-                        <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple images.</small>
+                        
+                             
+                        
+                        <div class="masonry-container">
+                            {% for i in images %}
+                                <div class="masonry-item">
+                                    <img class="selected-images" src="{{media_url}}{{i.image}}"> 
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
                     </div>
                     
                     
