@@ -124,9 +124,13 @@
                 <h1 class="w">Welcome, {{username2}}</h1>
                 <br>
                 {% for message in messages  %}
-                <p><div class="alert alert-success" role="alert">
-                    {{message}}
-                </div>
+                <p>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{message}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                 </p>
                 {% endfor %}
                 <br>
@@ -204,6 +208,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+    
 
 </body>
 </html>

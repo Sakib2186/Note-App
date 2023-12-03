@@ -139,16 +139,21 @@
             <div class="box text-left">
                 <div class="box-divider m-0"></div>
                 <div class="box-body">
+                    {% for message in messages  %}
+                        <p>
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{message}}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        </p>
+                    {% endfor %}
 
                     <div class="card-container h-100">
                         <div class="card bg-light h-100">
                             <div class="card-body">
-                                {% for message in messages  %}
-                                <p><div class="alert alert-success" role="alert">
-                                    {{message}}
-                                  </div>
-                                </p>
-                                {% endfor %}
+                                
                                 <h2>{{ note.title }}</h2>
                                 <p>Username: {{ note.username | safe }}</p>
                                 {% if note.note_label %}
@@ -158,17 +163,17 @@
                                 <p class="card-text" >{{ note.description | safe}}</p>
 
                                 {% if note.images.all %}
-                                <div class="masonry-container">
-                                    {% for image in note.images.all %}
-                                        <div class="masonry-item">
-                                            {% if image.image.url != None %}
-                                                <a data-fancybox="note-gallery" href="{{ image.image.url }}" data-caption="{{ note.title | safe }}">
-                                                    <img src="{{ image.image.url }}" alt="{{ note.title }}">
-                                                </a>
-                                            {% endif %}
-                                        </div>
-                                    {% endfor %}
-                                </div>
+                                    <div class="masonry-container">
+                                        {% for image in note.images.all %}
+                                            <div class="masonry-item">
+                                                {% if image.image.url != None %}
+                                                    <a data-fancybox="note-gallery" href="{{ image.image.url }}" data-caption="{{ note.title | safe }}">
+                                                        <img src="{{ image.image.url }}" alt="{{ note.title }}">
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
                                 
                                 {% endif %}
 
