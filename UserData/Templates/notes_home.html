@@ -80,9 +80,14 @@
         }
 
         .description-container {
-            max-height: 100px;
+            max-height: 150px; /* Adjust the value based on your preference */
             overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
         }
+        
         
     </style>
 </head>
@@ -143,8 +148,10 @@
                         <div class="card-body">
                             <h5 class="card-title">{{note.pk}}. {{note.title | safe }}</h5>
                             <p>Posted on {{ note.created_at|date:"F j, Y" }} at {{ note.created_at|time:"g:i A" }}</p>
-                            <p class="card-text">Label(s): {{note.note_label}}</p>
-                            <div class="description-container" style="max-height: 100px; overflow: hidden;">
+                            {% if note.note_label %}
+                                <p class="card-text">Label(s): {{note.note_label}}</p>
+                            {% endif %}
+                            <div class="description-container">
                                 <p class="card-text">{{note.description | safe}}</p>
                             </div>
                             <a href="{% url 'UserData:note_description' pk=note.pk %}" style="position: absolute; top: 0; bottom: 0; left: 0; width: 100%;"></a>
