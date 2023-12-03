@@ -59,7 +59,7 @@ def logout(request):
 @login_required
 def notes_home(request,username):
     username=request.user.username
-    get_all_notes=UserNotes.objects.filter(username=username)
+    get_all_notes=UserNotes.objects.filter(username=username).order_by('-created_at')
     print(get_all_notes)
     context={
         'username2':username,
