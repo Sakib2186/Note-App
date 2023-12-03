@@ -143,6 +143,12 @@
                     <div class="card-container h-100">
                         <div class="card bg-light h-100">
                             <div class="card-body">
+                                {% for message in messages  %}
+                                <p><div class="alert alert-success" role="alert">
+                                    {{message}}
+                                  </div>
+                                </p>
+                                {% endfor %}
                                 <h2>{{ note.title }}</h2>
                                 <p>Username: {{ note.username | safe }}</p>
                                 {% if note.note_label %}
