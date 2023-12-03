@@ -29,6 +29,12 @@
                 <button type="submit" class="btn btn-outline-success" name="login">Login</button>
 
                 <p>Don't have an Account? <span><a class="link-secondary" href="{% url 'UserData:signup' %}">Signup</a></span></p>
+                {% for message in messages  %}
+                    <p><div class="alert alert-info" role="alert">
+                    {{message}}
+                    </div>
+                    </p>
+                {% endfor %}
             </form>
         </div>
     </div>

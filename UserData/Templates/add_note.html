@@ -67,6 +67,12 @@
     <div class="page_title text-center mt-4">
       <br><br>
         <h1 class="w">Create a New Note</h1>
+        {% for message in messages  %}
+            <p><div class="alert alert-success" role="alert">
+                {{message}}
+                </div>
+            </p>
+        {% endfor %}
         <br>
     </div>
     <div class="note_form">
