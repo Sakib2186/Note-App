@@ -26,6 +26,7 @@ def login(request):
             return redirect('UserData:notes_home',username)
         else:
             print("Credentials dont match")
+            messages.error(request,"Username or Password incorrect")
             
     return render(request,'login.html')
 
@@ -107,6 +108,7 @@ def add_note(request, username):
             for file in files:
                 NoteImage.objects.create(note=new_note, image=file)
 
+            messages.success(request,"Note added")
             return redirect('UserData:notes_home', username)
     
         if request.POST.get('add_labels'):
@@ -114,6 +116,7 @@ def add_note(request, username):
             label_name = request.POST['label']
             new_label = Notes_Label.objects.create(labelName=label_name,label_for =UserInfo.objects.get(username=username))
             new_label.save()
+            messages.success(request,"New label added")
              
 
     
@@ -132,6 +135,7 @@ def note_description(request, pk):
      
     if request.method == 'POST':
         note.delete()
+        messages.success(request,"Note Deleted")
         return redirect('UserData:notes_home', username)
 
 
@@ -172,6 +176,7 @@ def notes_edit(request,pk):
             label_name = request.POST['label']
             new_label = Notes_Label.objects.create(labelName=label_name,label_for =UserInfo.objects.get(username=username))
             new_label.save()
+            messages.success(request,"New label added")
             return redirect('UserData:note_description',pk) 
 
         if request.POST.get('edit_note'):
@@ -201,6 +206,7 @@ def notes_edit(request,pk):
             note.note_label = string
             note.date = datetime.datetime.now()
             note.save()
+            messages.success(request,"Note Updated")
             return redirect('UserData:note_description',pk)
 
 
