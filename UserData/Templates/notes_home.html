@@ -175,6 +175,11 @@
 
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
     
     <script>
         function searchTable() {
@@ -182,31 +187,30 @@
             var input, filter, cards, i, title, label, description, pk, txtContent;
             input = document.getElementById("searchInput");
             filter = input.value.toUpperCase();
-            cards = document.getElementsByClassName("note-card"); // Assuming each card is wrapped in a col-lg-2 div
+            cards = document.getElementsByClassName("note-card");
     
             // Loop through all cards, and hide/show based on the search query
             for (i = 0; i < cards.length; i++) {
                 title = cards[i].getElementsByClassName("card-title")[0];
                 label = cards[i].getElementsByClassName("card-text")[0];
-                description = cards[i].getElementsByClassName("card-text")[1]; // Assuming description is the second card-text element
-                pk = cards[i].getElementsByClassName("card-title")[0].innerText.split(".")[0]; // Extracting PK from the title
+                description = cards[i].getElementsByClassName("description-container")[0];
+                pk = title.innerText.split(".")[0];
     
-                if (title && label && description) {
-                    txtContent = (pk + title.textContent + label.textContent + description.textContent).toUpperCase();
+                // Combine the text content for filtering
+                txtContent = (pk + title.innerText + (label ? label.innerText : "") + description.innerText).toUpperCase();
     
-                    if (txtContent.indexOf(filter) > -1) {
-                        cards[i].style.display = "block"; // Show the card
-                    } else {
-                        cards[i].style.display = "none"; // Hide the card
-                    }
+                // Check if the filter is found in the combined text content
+                if (txtContent.includes(filter) || filter === "") {
+                    cards[i].style.display = "block"; // Show the card
+                } else {
+                    cards[i].style.display = "none"; // Hide the card
                 }
             }
         }
     </script>
     
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    
 
     
 
