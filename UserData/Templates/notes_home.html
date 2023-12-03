@@ -157,7 +157,7 @@
                 {% for note in all_notes %}
                     <div class="card note-card bg-light masonry-item">
                         <div class="card-body">
-                            <h5 class="card-title">{{note.pk}}. {{note.title | safe }}</h5>
+                            <h5 class="card-title">{{forloop.counter}}. {{note.title | safe }}</h5>
                             <p>Posted on {{ note.created_at|date:"F j, Y" }} at {{ note.created_at|time:"g:i A" }}</p>
                             {% if note.note_label %}
                                 <p class="card-text">Label(s): {{note.note_label}}</p>
